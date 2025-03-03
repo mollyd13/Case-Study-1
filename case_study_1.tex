@@ -212,7 +212,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, interior hidden, breakable, boxrule=0pt, sharp corners, borderline west={3pt}{0pt}{shadecolor}, enhanced]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, frame hidden, breakable, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, enhanced, sharp corners]}{\end{tcolorbox}}\fi
 
 \emph{Your written short report should be the first thing your reader
 encounters in your case study document. While you may choose to label
@@ -323,8 +323,8 @@ additional text with error messages or warnings to the PDF.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{both\_transformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
-\FunctionTok{plot}\NormalTok{(both\_transformed)}
+\NormalTok{ytransformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Bush2000, }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
+\FunctionTok{plot}\NormalTok{(ytransformed)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -360,7 +360,48 @@ additional text with error messages or warnings to the PDF.}
 
 \end{figure}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-1.pdf}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{both\_transformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
+\FunctionTok{plot}\NormalTok{(both\_transformed)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-1.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-2.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-3.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-4.pdf}
+
+}
+
+\end{figure}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-1.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -392,10 +433,39 @@ F-statistic:   413 on 1 and 64 DF,  p-value: < 2.2e-16
 \hypertarget{fitted-equation}{%
 \section{Fitted Equation}\label{fitted-equation}}
 
-\(\widehat{\log(y_i)} = -2.34149 + 0.73096\log(x_i)\)
+Let \(buchanan_i\) denote the number of votes cast for Buchanan in
+county \(i\) and \(bush_i\) denote the number of votes cast for Bush in
+county \(i\) during the U.S. presidential election of November 7, 2000.
+Our final linear regression model for the mean is
+\(E[log(buchanan_i) | log(bush_i)] = \beta_0 + \beta_1\log(bush_i).\) We
+fit our sample data to this model, and found estimates for the
+coefficients. Our sample intercept, \(\hat{\beta_0}\), is -2.34149 with
+a standard error of 0.35442. Our sample slope, \(\hat{\beta_1}\), is
+0.73096 with a standard error of 0.03597. Both coefficients have a p
+value less than 0.05, making them statistically significant. So our
+fitted model is
+\(\widehat{\log(buchanan_i)} = -2.34149 + 0.73096\log(bush_i).\)
 
 \hypertarget{prediction-interval}{%
 \section{Prediction Interval}\label{prediction-interval}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(broom)}
+\NormalTok{predicted\_palm\_beach }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Bush2000 =} \DecValTok{152846}\NormalTok{)}
+\NormalTok{both\_transformed }\SpecialCharTok{|\textgreater{}} \FunctionTok{augment}\NormalTok{(}\AttributeTok{newdata =}\NormalTok{ predicted\_palm\_beach, }\AttributeTok{interval =} \StringTok{"prediction"}\NormalTok{, }\AttributeTok{conf.level =} \FloatTok{0.95}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# A tibble: 1 x 4
+  Bush2000 .fitted .lower .upper
+     <dbl>   <dbl>  <dbl>  <dbl>
+1   152846    6.38   5.52   7.24
+\end{verbatim}
+
+Point Estimate = e\^{}6.384143 = 592.376848042 Prediction Interval =
+(e\^{}5.524656, e\^{}7.24363) = (250.8, 1399.164)
 
 \emph{When reporting the results of your regression analysis, I would
 like you to write out a mathematical description of the main/final

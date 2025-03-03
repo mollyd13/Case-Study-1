@@ -80,7 +80,7 @@ election_wo_pb |> ggplot(aes(x = log(Bush2000), y = log(Buchanan2000))) + geom_p
 summary(both_transformed)
 ```
 # Fitted Equation
-$\widehat{\log(y_i)} = -2.34149 + 0.73096\log(x_i)$
+Let $buchanan_i$ denote the number of votes cast for Buchanan in county $i$ and $bush_i$ denote the number of votes cast for Bush in county $i$ during the U.S. presidential election of November 7, 2000. Our final linear regression model for the mean is $E[log(buchanan_i) | log(bush_i)] = \beta_0 + \beta_1\log(bush_i).$ We fit our sample data to this model, and found estimates for the coefficients. Our sample intercept, $\hat{\beta_0}$, is -2.34149 with a standard error of 0.35442. Our sample slope, $\hat{\beta_1}$, is 0.73096 with a standard error of 0.03597. Both coefficients have a p value less than 0.05, making them statistically significant. So our fitted model is $\widehat{\log(buchanan_i)} = -2.34149 + 0.73096\log(bush_i).$
 
 # Prediction Interval
 ```{r}
