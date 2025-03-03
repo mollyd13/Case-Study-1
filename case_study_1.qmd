@@ -46,22 +46,20 @@ wine <- Sleuth2::ex0823
 ### An example section heading
 
 _When you create plots for your case study report, the `echo: false` chunk option tells Quarto to include the final output of your R commands (in this case, a plot) in your rendered PDF *without* printing the underlying R commands that generated that plot! The message and warning flags both prevent R from printing any additional text with error messages or warnings to the PDF._
-```{r}
+```{r include=FALSE}
 # Exploring transformations 
 untransformed <- lm(Buchanan2000 ~ Bush2000, data = election_wo_pb)
 plot(untransformed)
 ```
-```{r}
+```{r include=FALSE}
 xtransformed <- lm(Buchanan2000 ~ log(Bush2000), data = election_wo_pb)
 plot(xtransformed)
 ```
-```{r}
+```{r include=FALSE}
 ytransformed <- lm(log(Buchanan2000) ~ Bush2000, data = election_wo_pb)
 plot(ytransformed)
 ```
-
-
-```{r}
+```{r include=FALSE}
 both_transformed <- lm(log(Buchanan2000) ~ log(Bush2000), data = election_wo_pb)
 plot(both_transformed)
 ```
@@ -89,7 +87,10 @@ predicted_palm_beach = data.frame(Bush2000 = 152846)
 both_transformed |> augment(newdata = predicted_palm_beach, interval = "prediction", conf.level = 0.95)
 ```
 Point Estimate = e^6.384143 = 592.376848042
+
 Prediction Interval = (e^5.524656, e^7.24363) = (250.8, 1399.164)
+
+This means that we are 95% confident that the number of votes cast for Buchanan in the U.S. presidential election of November 7, 2000 when the number of votes cast for Bush is 152846 (the reported number of votes for Bush in Palm Beach county) is between 250.8 and 1399.164 votes.
 
 _When reporting the results of your regression analysis, I would like you to write out a mathematical description of the main/final population model for the mean. Here is an example of what that might look like:_
 

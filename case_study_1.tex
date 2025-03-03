@@ -212,7 +212,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, frame hidden, breakable, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, enhanced, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, enhanced, borderline west={3pt}{0pt}{shadecolor}, interior hidden, boxrule=0pt, frame hidden, sharp corners]}{\end{tcolorbox}}\fi
 
 \emph{Your written short report should be the first thing your reader
 encounters in your case study document. While you may choose to label
@@ -241,163 +241,6 @@ output of your R commands (in this case, a plot) in your rendered PDF
 \emph{without} printing the underlying R commands that generated that
 plot! The message and warning flags both prevent R from printing any
 additional text with error messages or warnings to the PDF.}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Exploring transformations }
-\NormalTok{untransformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Buchanan2000 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Bush2000, }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
-\FunctionTok{plot}\NormalTok{(untransformed)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-2-1.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-2-2.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-2-3.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-2-4.pdf}
-
-}
-
-\end{figure}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{xtransformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Buchanan2000 }\SpecialCharTok{\textasciitilde{}} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
-\FunctionTok{plot}\NormalTok{(xtransformed)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-1.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-2.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-3.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-4.pdf}
-
-}
-
-\end{figure}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{ytransformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Bush2000, }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
-\FunctionTok{plot}\NormalTok{(ytransformed)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-1.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-2.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-3.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-4.pdf}
-
-}
-
-\end{figure}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{both\_transformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
-\FunctionTok{plot}\NormalTok{(both\_transformed)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-1.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-2.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-3.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-5-4.pdf}
-
-}
-
-\end{figure}
 
 \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-1.pdf}
 
@@ -464,8 +307,14 @@ fitted model is
 1   152846    6.38   5.52   7.24
 \end{verbatim}
 
-Point Estimate = e\^{}6.384143 = 592.376848042 Prediction Interval =
-(e\^{}5.524656, e\^{}7.24363) = (250.8, 1399.164)
+Point Estimate = e\^{}6.384143 = 592.376848042
+
+Prediction Interval = (e\^{}5.524656, e\^{}7.24363) = (250.8, 1399.164)
+
+This means that we are 95\% confident that the number of votes cast for
+Buchanan in the U.S. presidential election of November 7, 2000 when the
+number of votes cast for Bush is 152846 (the reported number of votes
+for Bush in Palm Beach county) is between 250.8 and 1399.164 votes.
 
 \emph{When reporting the results of your regression analysis, I would
 like you to write out a mathematical description of the main/final
