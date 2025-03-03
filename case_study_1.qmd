@@ -1,6 +1,6 @@
 ---
 title: "Your Informative Title Here"
-author: "your names here"
+author: "Sydney Weisberg and Molly Daniel"
 date: "Case Study 1: March 5, 2025"
 format: 
   pdf:
@@ -46,14 +46,44 @@ wine <- Sleuth2::ex0823
 ### An example section heading
 
 _When you create plots for your case study report, the `echo: false` chunk option tells Quarto to include the final output of your R commands (in this case, a plot) in your rendered PDF *without* printing the underlying R commands that generated that plot! The message and warning flags both prevent R from printing any additional text with error messages or warnings to the PDF._
+```{r}
+# Exploring transformations 
+untransformed <- lm(Buchanan2000 ~ Bush2000, data = election_wo_pb)
+plot(untransformed)
+```
+```{r}
+xtransformed <- lm(Buchanan2000 ~ log(Bush2000), data = election_wo_pb)
+plot(xtransformed)
+```
+```{r}
+both_transformed <- lm(log(Buchanan2000) ~ log(Bush2000), data = election_wo_pb)
+plot(both_transformed)
+```
+
 
 ```{r}
 #| echo: false
 #| message: false
 #| warning: false
 
-wine |> ggplot(aes(x = Wine, y = Mortality)) + geom_point() + ggtitle("Association between wine consumption and mortality rates.")
+election_wo_pb |> ggplot(aes(x = Bush2000, y = Buchanan2000)) + geom_point() + ggtitle("Association between votes for Bush and votes for Buchanan.")
+
+election_wo_pb |> ggplot(aes(x = log(Bush2000), y = log(Buchanan2000))) + geom_point() + ggtitle("Transformed Association between votes for Bush and votes for Buchanan.")
 ```
+```{r}
+summary(both_transformed)
+```
+# Fitted Equation
+$\widehat{\log(y_i)} = -2.34149 + 0.73096\log(x_i)$
+
+# Prediction Interval
+```{r}
+library(broom)
+predicted_palm_beach = data.frame(Bush2000 = 152846)
+both_transformed |> augment(newdata = predicted_palm_beach, interval = "prediction", conf.level = 0.95)
+```
+Point Estimate = e^6.384143 = 592.376848042
+Prediction Interval = (e^5.524656, e^7.24363) = (250.8, 1399.164)
 
 _When reporting the results of your regression analysis, I would like you to write out a mathematical description of the main/final population model for the mean. Here is an example of what that might look like:_
 
