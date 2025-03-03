@@ -56,6 +56,12 @@ xtransformed <- lm(Buchanan2000 ~ log(Bush2000), data = election_wo_pb)
 plot(xtransformed)
 ```
 ```{r}
+ytransformed <- lm(log(Buchanan2000) ~ Bush2000, data = election_wo_pb)
+plot(ytransformed)
+```
+
+
+```{r}
 both_transformed <- lm(log(Buchanan2000) ~ log(Bush2000), data = election_wo_pb)
 plot(both_transformed)
 ```
