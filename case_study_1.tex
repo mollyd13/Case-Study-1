@@ -44,14 +44,28 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
 
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -71,7 +85,7 @@
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
@@ -81,7 +95,7 @@
 \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
 \newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
 \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
@@ -138,10 +152,6 @@
 \DefineVerbatimEnvironment{OutputCode}{Verbatim}{breaklines,commandchars=\\\{\}}
 \KOMAoption{captions}{tableheading}
 \makeatletter
-\makeatother
-\makeatletter
-\makeatother
-\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
 \ifdefined\contentsname
@@ -177,27 +187,21 @@
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \makeatother
 \makeatletter
+\makeatother
+\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-\makeatletter
-\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
-\makeatother
-\makeatletter
-\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
-\makeatother
-\makeatletter
-\makeatother
-\makeatletter
-\makeatother
+
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={Your Informative Title Here},
+  pdftitle={IDK: A Statistical Analysis of Palm Beach County Election Votes in 2000},
   pdfauthor={Sydney Weisberg and Molly Daniel},
   colorlinks=true,
   linkcolor={blue},
@@ -206,45 +210,198 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-\title{Your Informative Title Here}
+
+\title{IDK: A Statistical Analysis of Palm Beach County Election Votes
+in 2000}
 \author{Sydney Weisberg and Molly Daniel}
 \date{Invalid Date}
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, enhanced, borderline west={3pt}{0pt}{shadecolor}, interior hidden, boxrule=0pt, frame hidden, sharp corners]}{\end{tcolorbox}}\fi
 
-\emph{Your written short report should be the first thing your reader
-encounters in your case study document. While you may choose to label
-each of the required components/sections of the short report with its
-own header (see below for an example of creating a header in Quarto),
-you do not need to do so provided that all of the required information
-is included. Your report should be self-contained and written in such a
-way that a quantitatively inclined friend (who has taken or is taking
-SDS 291) could follow what you did without necessarily knowing anything
-about the U.S. presidential election of 2000.}
 
-\emph{As you write your report, you may wish to reference the guide to
-typesetting regression lines in Quarto using LaTeX (linked at the top of
-our class Moodle page), the Quarto help page for formatting documents
-using Markdown (https://quarto.org/docs/authoring/markdown-basics.html),
-and the Quarto help page for customizing the output from executed code
-chunks (https://quarto.org/docs/computations/execution-options.html).}
+\section{Introduction}\label{introduction}
 
-\hypertarget{an-example-section-heading}{%
-\subsubsection{An example section
-heading}\label{an-example-section-heading}}
+\section{Data Description}\label{data-description}
 
-\emph{When you create plots for your case study report, the
-\texttt{echo:\ false} chunk option tells Quarto to include the final
-output of your R commands (in this case, a plot) in your rendered PDF
-\emph{without} printing the underlying R commands that generated that
-plot! The message and warning flags both prevent R from printing any
-additional text with error messages or warnings to the PDF.}
+The election data consists of the numbers of votes for Buchanan and Bush
+in all 67 counties in Florida.
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-1.pdf}
+\includegraphics{case_study_1_files/figure-pdf/warning-FALSE-1.pdf}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-2.pdf}
+\includegraphics{case_study_1_files/figure-pdf/warning-FALSE-2.pdf}
+
+\section{Modeling Process}\label{modeling-process}
+
+In order to create a model, we first observed a relationship in the
+scatter plot showing the votes for Buchanan and Bush in each of the
+Florida counties. From this, we noticed data clustering occurring in the
+bottom left corner of the scatter plot. In order to expand the scale, we
+applied a log transformation to both the Buchanan and Bush votes,
+revealing a multiplicative relationship between the two.
+
+Let \(buchanan_i\) denote the number of votes cast for Buchanan in
+county \(i\) and \(bush_i\) denote the number of votes cast for Bush in
+Florida county \(i\) during the U.S. presidential election of November
+7, 2000. Our final linear regression model for the mean is
+\(E[log(buchanan_i) | log(bush_i)] = \beta_0 + \beta_1\log(bush_i).\) We
+fit our sample data to this model, and found estimates for the
+coefficients.
+
+\begin{table}[H]
+\centering
+\begin{tabular}[t]{lcccc}
+\toprule
+  & Estimate & Std. Error & t value & Pr(>|t|)\\
+\midrule
+(Intercept) & -2.34 & 0.35 & -6.61 & 0\\
+log(Bush2000) & 0.73 & 0.04 & 20.32 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Our sample intercept, \(\hat{\beta_0}\), is -2.34149 with a standard
+error of 0.35442. Our sample slope, \(\hat{\beta_1}\), is 0.73096 with a
+standard error of 0.03597. Both coefficients have a p value less than
+0.05, making them statistically significant. So our fitted model is
+\(\widehat{\log(buchanan_i)} = -2.34149 + 0.73096\log(bush_i).\)
+
+Point Estimate = e\^{}6.384143 = 592.376848042
+
+Prediction Interval = (e\^{}5.524656, e\^{}7.24363) = (250.8, 1399.164)
+
+This means that we are 95\% confident that the number of votes cast for
+Buchanan in the U.S. presidential election of November 7, 2000 when the
+number of votes cast for Bush is 152846 (the reported number of votes
+for Bush in Palm Beach county) is between 250.8 and 1399.164 votes.
+
+\section{Conclusion}\label{conclusion}
+
+Since the 3407 votes for Buchanan in Palm Beach County in the 2000
+election falls outside of our prediction interval of 250.8 to 1399.164
+where Bush receives 15,2846 votes, we can conclude that it is likely
+that there is some external factor impacting the votes of the residents
+in Palm Beach. One limitation of this analysis is the lack of
+information regarding the sociopolitical climate of Palm Beach County in
+2020. We do not know the demographic breakdown of the county. If there
+were a higher percentage of centrists who would vote for a member of the
+Reform Party in 2020 then that could explain the abnormal amount of
+Buchanan votes. Additionally, we don't know what campaigning was like in
+Palm Beach County. There could have been additional campaigns for
+Buchanan there that caused a vote increase particularly in that county.
+Based on the assumption that some of the votes cast for Buchanan in Palm
+Beach were actually intended to be votes for Gore, we make a
+generalization that there are more Democratic voters in Palm Beach
+County than represented in our data. Without the cultural knowledge of
+the environment where the data comes from, we can't be fully confident
+that our model is a good fit for the data.
+
+\section{R Appendix}\label{r-appendix}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Importing relevant packages}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(Sleuth2)}
+\FunctionTok{library}\NormalTok{(broom)}
+\FunctionTok{library}\NormalTok{(kableExtra) }
+
+\CommentTok{\# Importing election data from the textbook}
+\NormalTok{election }\OtherTok{\textless{}{-}}\NormalTok{ Sleuth2}\SpecialCharTok{::}\NormalTok{ex0825}
+
+\CommentTok{\# Removing the extreme Palm Beach observation}
+\NormalTok{election\_wo\_pb }\OtherTok{\textless{}{-}}\NormalTok{ election }\SpecialCharTok{|\textgreater{}} \FunctionTok{filter}\NormalTok{(County }\SpecialCharTok{!=} \StringTok{"Palm Beach"}\NormalTok{)}
+
+\CommentTok{\# Displaying an untransformed scatter plot between Bush and Buchanan votes}
+\NormalTok{election\_wo\_pb }\SpecialCharTok{|\textgreater{}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Bush2000, }\AttributeTok{y =}\NormalTok{ Buchanan2000)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Association between votes for Bush and votes for Buchanan."}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Displaying a doubly transformed scatter plot between Bush and Buchanan votes}
+\NormalTok{election\_wo\_pb }\SpecialCharTok{|\textgreater{}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{y =} \FunctionTok{log}\NormalTok{(Buchanan2000))) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Transformed Association between votes for Bush and votes for Buchanan."}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Testing transformations to determine the best fit for the model}
+
+\CommentTok{\# Untransformed model}
+\NormalTok{untransformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Buchanan2000 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Bush2000, }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
+\FunctionTok{plot}\NormalTok{(untransformed)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-3.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-4.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-5.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-6.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Model with a logarithmic explanatory variable transformation}
+\NormalTok{xtransformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Buchanan2000 }\SpecialCharTok{\textasciitilde{}} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
+\FunctionTok{plot}\NormalTok{(xtransformed)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-7.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-8.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-9.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-10.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Model with a logarithmic response variable transformation}
+\NormalTok{ytransformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Bush2000, }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
+\FunctionTok{plot}\NormalTok{(ytransformed)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-11.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-12.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-13.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-14.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Model with a logarithmic explanatory and response variable transformation}
+\NormalTok{both\_transformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
+
+\CommentTok{\# Getting the coefficients for the doubly transformed model}
+\NormalTok{both\_transformed\_table }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(both\_transformed)}\SpecialCharTok{$}\NormalTok{coefficients}
+
+\CommentTok{\# Creating a visible, clean table to display the coefficients from the doubly transformed model}
+\NormalTok{both\_transformed\_table }\SpecialCharTok{|\textgreater{}} \FunctionTok{kbl}\NormalTok{(}\AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Estimate"}\NormalTok{, }\StringTok{"Std. Error"}\NormalTok{, }\StringTok{"t value"}\NormalTok{, }\StringTok{"Pr(\textgreater{}|t|)"}\NormalTok{), }\AttributeTok{align =} \StringTok{"c"}\NormalTok{, }\AttributeTok{booktabs =}\NormalTok{ T, }\AttributeTok{linesep=}\StringTok{""}\NormalTok{, }\AttributeTok{digits =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} \FunctionTok{kable\_classic}\NormalTok{(}\AttributeTok{full\_width =}\NormalTok{ F, }\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}[t]{lcccc}
+\toprule
+  & Estimate & Std. Error & t value & Pr(>|t|)\\
+\midrule
+(Intercept) & -2.34 & 0.35 & -6.61 & 0\\
+log(Bush2000) & 0.73 & 0.04 & 20.32 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -273,28 +430,9 @@ Multiple R-squared:  0.8658,    Adjusted R-squared:  0.8637
 F-statistic:   413 on 1 and 64 DF,  p-value: < 2.2e-16
 \end{verbatim}
 
-\hypertarget{fitted-equation}{%
-\section{Fitted Equation}\label{fitted-equation}}
-
-Let \(buchanan_i\) denote the number of votes cast for Buchanan in
-county \(i\) and \(bush_i\) denote the number of votes cast for Bush in
-county \(i\) during the U.S. presidential election of November 7, 2000.
-Our final linear regression model for the mean is
-\(E[log(buchanan_i) | log(bush_i)] = \beta_0 + \beta_1\log(bush_i).\) We
-fit our sample data to this model, and found estimates for the
-coefficients. Our sample intercept, \(\hat{\beta_0}\), is -2.34149 with
-a standard error of 0.35442. Our sample slope, \(\hat{\beta_1}\), is
-0.73096 with a standard error of 0.03597. Both coefficients have a p
-value less than 0.05, making them statistically significant. So our
-fitted model is
-\(\widehat{\log(buchanan_i)} = -2.34149 + 0.73096\log(bush_i).\)
-
-\hypertarget{prediction-interval}{%
-\section{Prediction Interval}\label{prediction-interval}}
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(broom)}
+\CommentTok{\# Creating a prediction interval}
 \NormalTok{predicted\_palm\_beach }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Bush2000 =} \DecValTok{152846}\NormalTok{)}
 \NormalTok{both\_transformed }\SpecialCharTok{|\textgreater{}} \FunctionTok{augment}\NormalTok{(}\AttributeTok{newdata =}\NormalTok{ predicted\_palm\_beach, }\AttributeTok{interval =} \StringTok{"prediction"}\NormalTok{, }\AttributeTok{conf.level =} \FloatTok{0.95}\NormalTok{)}
 \end{Highlighting}
@@ -307,106 +445,6 @@ fitted model is
 1   152846    6.38   5.52   7.24
 \end{verbatim}
 
-Point Estimate = e\^{}6.384143 = 592.376848042
-
-Prediction Interval = (e\^{}5.524656, e\^{}7.24363) = (250.8, 1399.164)
-
-This means that we are 95\% confident that the number of votes cast for
-Buchanan in the U.S. presidential election of November 7, 2000 when the
-number of votes cast for Bush is 152846 (the reported number of votes
-for Bush in Palm Beach county) is between 250.8 and 1399.164 votes.
-
-\emph{When reporting the results of your regression analysis, I would
-like you to write out a mathematical description of the main/final
-population model for the mean. Here is an example of what that might
-look like:}
-
-Let \(mort_i\) denote the heart disease mortality rate in country \(i\)
-(measured in deaths per 1,000 individuals) and \(wine_i\) denote the
-consumption of wine (measured in liters per person per year). Our final
-linear regression model is
-\[E[mort_i | wine_i] = \beta_0 + \beta_1\left(wine_i\right).\]
-
-\emph{You do not need to write out the fitted regression line, but you
-should (at a minimum) provide a table summarizing the estimated
-coefficients of the model and their corresponding standard errors, like
-the one shown below. A print-out from the \texttt{summary()} command
-alone is not sufficient.}
-
-\begin{table}[H]
-\centering
-\begin{tabular}[t]{lcccc}
-\toprule
-  & Name for Col. 1 & Name for Col. 2 & Name for Col. 3 & Name for Col. 4\\
-\midrule
-(Intercept) & 7.69 & 0.47 & 16.24 & 0e+00\\
-Wine & -0.08 & 0.02 & -4.48 & 4e-04\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\hypertarget{r-appendix}{%
-\section{R Appendix}\label{r-appendix}}
-
-\emph{Copy and paste all code that you used for your case study into one
-chunk at the end of your written report. Before submitting your case
-study, take one final look at the R Appendix and make sure that all code
-is clearly visible. If you see a line running off the side of the PDF,
-please split the code over multiple lines using a linebreak. The header
-at the top of this template should ensure that lines of code are
-automatically wrapped in your final document.}
-
-\#\textbar{} message: FALSE \#\textbar{} warning: FALSE
-
-\hypertarget{loading-necessary-packages}{%
-\section{Loading necessary packages}\label{loading-necessary-packages}}
-
-library(tidyverse) library(Sleuth2) library(broom)\\
-library(kableExtra)
-
-\hypertarget{loading-the-data-for-case-study-one}{%
-\section{Loading the data for case study
-one}\label{loading-the-data-for-case-study-one}}
-
-election \textless- Sleuth2::ex0825
-
-\hypertarget{creating-a-second-dataset-with-palm-beach-county-excluded}{%
-\section{Creating a second dataset with Palm Beach County
-excluded}\label{creating-a-second-dataset-with-palm-beach-county-excluded}}
-
-election\_wo\_pb \textless- election \textbar\textgreater{}
-filter(County != ``Palm Beach'')
-
-\hypertarget{loading-another-dataset-on-wine-consumption-and-heart-disease-mortality}{%
-\section{Loading another dataset on wine consumption and heart disease
-mortality}\label{loading-another-dataset-on-wine-consumption-and-heart-disease-mortality}}
-
-wine \textless- Sleuth2::ex0823
-
-\hypertarget{creating-a-scatterplot-for-the-relationship-between-mortality-and-wine-consumption}{%
-\section{Creating a scatterplot for the relationship between mortality
-and wine
-consumption}\label{creating-a-scatterplot-for-the-relationship-between-mortality-and-wine-consumption}}
-
-wine \textbar\textgreater{} ggplot(aes(x = Wine, y = Mortality)) +
-geom\_point() + ggtitle(``Association between wine consumption and
-mortality rates.'')
-
-\hypertarget{fitting-and-summarizing-the-regression-line-for-mean-mortality}{%
-\section{Fitting and summarizing the regression line for mean
-mortality}\label{fitting-and-summarizing-the-regression-line-for-mean-mortality}}
-
-\hypertarget{as-a-function-of-wine-consumption}{%
-\section{as a function of wine
-consumption}\label{as-a-function-of-wine-consumption}}
-
-wine.lm \textless- lm(Mortality \textasciitilde{} Wine, data = wine)
-wine.lm.table \textless- wine.lm \textbar\textgreater{} tidy()
-wine.lm.table \textbar\textgreater{} kbl(col.names = c(``Name for Col.
-1'', ``Name for Col. 2'', ``Name for Col. 3'', ``Name for Col. 4'',
-``Name for Col. 5''), align = ``c'', booktabs = T, linesep=````, digits
-= c(2, 2, 2, 4)) \textbar\textgreater{} kable\_classic(full\_width = F,
-latex\_options = c(''HOLD\_position''))
 
 
 
