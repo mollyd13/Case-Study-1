@@ -44,28 +44,14 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
-\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}{
-    \@ifstar
-      \xxxParagraphStar
-      \xxxParagraphNoStar
-  }
-  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
-  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}{
-    \@ifstar
-      \xxxSubParagraphStar
-      \xxxSubParagraphNoStar
-  }
-  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
-  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-\makeatother
 
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -85,7 +71,7 @@
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
@@ -95,7 +81,7 @@
 \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
 \newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
 \newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
 \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
@@ -152,6 +138,10 @@
 \DefineVerbatimEnvironment{OutputCode}{Verbatim}{breaklines,commandchars=\\\{\}}
 \KOMAoption{captions}{tableheading}
 \makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
 \ifdefined\contentsname
@@ -187,21 +177,27 @@
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \makeatother
 \makeatletter
-\makeatother
-\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
+\makeatother
+\makeatletter
+\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\usepackage{bookmark}
-
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={IDK: A Statistical Analysis of Palm Beach County Election Votes in 2000},
+  pdftitle={A Statistical Analysis of Palm Beach County Election Votes in 2000},
   pdfauthor={Sydney Weisberg and Molly Daniel},
   colorlinks=true,
   linkcolor={blue},
@@ -210,35 +206,71 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-
-\title{IDK: A Statistical Analysis of Palm Beach County Election Votes
-in 2000}
+\title{A Statistical Analysis of Palm Beach County Election Votes in
+2000}
 \author{Sydney Weisberg and Molly Daniel}
-\date{Invalid Date}
+\date{2005-03-01}
 
 \begin{document}
 \maketitle
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, borderline west={3pt}{0pt}{shadecolor}, enhanced, sharp corners, frame hidden, boxrule=0pt]}{\end{tcolorbox}}\fi
 
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
-\section{Introduction}\label{introduction}
+During the US presidential election of November 7, 2000, Democratic
+voters in Palm Beach County complained that a confusing ballot format
+caused them to accidentally vote for the Reform Party candidate Pat
+Buchanan instead of the Democratic candidate Gore. Additionally, 19,000
+ballots were discarded because voters had marked two circles, possibly
+indicating that they got confused by the ballot and attempted to rectify
+their vote. Could the influx of votes for Buchanan in Palm Beach have
+occurred due to chance, or is there significant evidence that some
+external factor changed the outcome of the election? This analysis will
+examine the relationship between Bush votes (explanatory variable) and
+Buchanan votes (response variable) in Florida counties in order to draw
+a conclusion about whether or not the Palm Beach county vote count could
+have happened by chance given the trend/distribution of county votes.
 
-\section{Data Description}\label{data-description}
+\hypertarget{data-description}{%
+\section{Data Description}\label{data-description}}
 
 The election data consists of the numbers of votes for Buchanan and Bush
-in all 67 counties in Florida.
+in all 67 counties in Florida. We construct plots and fit our model
+using every county except Palm Beach. We do this so after we fit our
+model, we can see how Palm Beach data compares to the rest of the data.
+Here is a scatter plot showcasing the relationship between Bush votes
+and Buchanan votes.
 
 \includegraphics{case_study_1_files/figure-pdf/warning-FALSE-1.pdf}
 
-\includegraphics{case_study_1_files/figure-pdf/warning-FALSE-2.pdf}
-
-\section{Modeling Process}\label{modeling-process}
+\hypertarget{modeling-process}{%
+\section{Modeling Process}\label{modeling-process}}
 
 In order to create a model, we first observed a relationship in the
 scatter plot showing the votes for Buchanan and Bush in each of the
 Florida counties. From this, we noticed data clustering occurring in the
-bottom left corner of the scatter plot. In order to expand the scale, we
-applied a log transformation to both the Buchanan and Bush votes,
-revealing a multiplicative relationship between the two.
+bottom left corner of the scatter plot. When creating diagnostic plots
+of the data, it was clear that regression conditions were not met. In
+order to expand the scale, we applied a log transformation to both the
+Buchanan and Bush votes, revealing a multiplicative relationship between
+the two. After transformation, the diagnostic plots reveal that
+regression conditions are met. Below is a plot of both variables
+transformed by log:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{election\_wo\_pb }\SpecialCharTok{|\textgreater{}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{y =} \FunctionTok{log}\NormalTok{(Buchanan2000))) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Transformed Association between votes for Bush and votes for Buchanan."}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-2-1.pdf}
+
+}
+
+\end{figure}
 
 Let \(buchanan_i\) denote the number of votes cast for Buchanan in
 county \(i\) and \(bush_i\) denote the number of votes cast for Bush in
@@ -275,7 +307,8 @@ Buchanan in the U.S. presidential election of November 7, 2000 when the
 number of votes cast for Bush is 152846 (the reported number of votes
 for Bush in Palm Beach county) is between 250.8 and 1399.164 votes.
 
-\section{Conclusion}\label{conclusion}
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
 
 Since the 3407 votes for Buchanan in Palm Beach County in the 2000
 election falls outside of our prediction interval of 250.8 to 1399.164
@@ -296,7 +329,8 @@ County than represented in our data. Without the cultural knowledge of
 the environment where the data comes from, we can't be fully confident
 that our model is a good fit for the data.
 
-\section{R Appendix}\label{r-appendix}
+\hypertarget{r-appendix}{%
+\section{R Appendix}\label{r-appendix}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -317,7 +351,13 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-1.pdf}
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-1.pdf}
+
+}
+
+\end{figure}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -326,7 +366,13 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-2.pdf}
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-2.pdf}
+
+}
+
+\end{figure}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -338,13 +384,37 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-3.pdf}
+\begin{figure}[H]
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-4.pdf}
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-3.pdf}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-5.pdf}
+}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-6.pdf}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-4.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-5.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-6.pdf}
+
+}
+
+\end{figure}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -354,13 +424,37 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-7.pdf}
+\begin{figure}[H]
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-8.pdf}
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-7.pdf}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-9.pdf}
+}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-10.pdf}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-8.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-9.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-10.pdf}
+
+}
+
+\end{figure}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -370,13 +464,37 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-11.pdf}
+\begin{figure}[H]
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-12.pdf}
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-11.pdf}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-13.pdf}
+}
 
-\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-3-14.pdf}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-12.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-13.pdf}
+
+}
+
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-14.pdf}
+
+}
+
+\end{figure}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -444,7 +562,6 @@ F-statistic:   413 on 1 and 64 DF,  p-value: < 2.2e-16
      <dbl>   <dbl>  <dbl>  <dbl>
 1   152846    6.38   5.52   7.24
 \end{verbatim}
-
 
 
 

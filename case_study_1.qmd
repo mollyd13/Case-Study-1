@@ -1,7 +1,7 @@
 ---
-title: "IDK: A Statistical Analysis of Palm Beach County Election Votes in 2000"
+title: "A Statistical Analysis of Palm Beach County Election Votes in 2000"
 author: "Sydney Weisberg and Molly Daniel"
-date: "Case Study #1, `r Sys.Date()`"
+date: "Case Study #1, March 5, 2025"
 format: 
   pdf:
     keep-tex: true
@@ -29,22 +29,25 @@ election_wo_pb <- election |> filter(County != "Palm Beach")
 ```
 
 # Introduction
-
+During the US presidential election of November 7, 2000, Democratic voters in Palm Beach County complained that a confusing ballot format caused them to accidentally vote for the Reform Party candidate Pat Buchanan instead of the Democratic candidate Gore. Additionally, 19,000 ballots were discarded because voters had marked two circles, possibly indicating that they got confused by the ballot and attempted to rectify their vote. Could the influx of votes for Buchanan in Palm Beach have occurred due to chance, or is there significant evidence that some external factor changed the outcome of the election? This analysis will examine Buchanan votes as a function of Bush votes in Florida counties in order to draw a conclusion about whether or not the Palm Beach county vote count could have happened by chance given the trend/distribution of Florida county votes. 
 
 # Data Description
 
-The election data consists of the numbers of votes for Buchanan and Bush in all 67 counties in Florida. 
+The election data consists of the numbers of votes for Buchanan and Bush in all 67 counties in Florida. We construct plots and fit our model using every county except Palm Beach. We do this so after we fit our model, we can see how Palm Beach data compares to the rest of the data. Here is a scatter plot showcasing the relationship between Bush votes and Buchanan votes. 
 
 ```{r, echo=FALSE, message=FALSE, warning-FALSE}
 # syd note - I need to go back through this and add captions to these
 election_wo_pb |> ggplot(aes(x = Bush2000, y = Buchanan2000)) + geom_point() + ggtitle("Association between votes for Bush and votes for Buchanan.")
-
-election_wo_pb |> ggplot(aes(x = log(Bush2000), y = log(Buchanan2000))) + geom_point() + ggtitle("Transformed Association between votes for Bush and votes for Buchanan.")
 ```
 
 # Modeling Process
 
-In order to create a model, we first observed a relationship in the scatter plot showing the votes for Buchanan and Bush in each of the Florida counties. From this, we noticed data clustering occurring in the bottom left corner of the scatter plot. In order to expand the scale, we applied a log transformation to both the Buchanan and Bush votes, revealing a multiplicative relationship between the two.
+In order to create a model, we first observed a relationship in the scatter plot showing the votes for Buchanan and Bush in each of the Florida counties. From this, we noticed data clustering occurring in the bottom left corner of the scatter plot. When creating diagnostic plots of the data, it was clear that regression conditions were not met. In order to expand the scale, we applied a log transformation to both the Buchanan and Bush votes, revealing a multiplicative relationship between the two. After transformation, the diagnostic plots reveal that regression conditions are met. Below is a plot of both variables transformed by log: 
+
+```{r}
+election_wo_pb |> ggplot(aes(x = log(Bush2000), y = log(Buchanan2000))) + geom_point() + ggtitle("Transformed Association between votes for Bush and votes for Buchanan.")
+```
+
 
 Let $buchanan_i$ denote the number of votes cast for Buchanan in county $i$ and $bush_i$ denote the number of votes cast for Bush in Florida county $i$ during the U.S. presidential election of November 7, 2000.
 Our final linear regression model for the mean is $E[log(buchanan_i) | log(bush_i)] = \beta_0 + \beta_1\log(bush_i).$ We fit our sample data to this model, and found estimates for the coefficients. 
