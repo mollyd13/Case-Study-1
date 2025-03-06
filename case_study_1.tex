@@ -44,14 +44,28 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
+\makeatletter
 \ifx\paragraph\undefined\else
   \let\oldparagraph\paragraph
-  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
 \fi
 \ifx\subparagraph\undefined\else
   \let\oldsubparagraph\subparagraph
-  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+\makeatother
 
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -71,7 +85,7 @@
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
@@ -81,7 +95,7 @@
 \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
 \newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
 \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
@@ -138,10 +152,6 @@
 \DefineVerbatimEnvironment{OutputCode}{Verbatim}{breaklines,commandchars=\\\{\}}
 \KOMAoption{captions}{tableheading}
 \makeatletter
-\makeatother
-\makeatletter
-\makeatother
-\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
 \ifdefined\contentsname
@@ -177,23 +187,17 @@
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \makeatother
 \makeatletter
+\makeatother
+\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-\makeatletter
-\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
-\makeatother
-\makeatletter
-\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
-\makeatother
-\makeatletter
-\makeatother
-\makeatletter
-\makeatother
+
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
@@ -206,77 +210,85 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
+
 \title{A Statistical Analysis of Palm Beach County Election Votes in
 2000}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Case Study \#1}
 \author{Sydney Weisberg and Molly Daniel}
-\date{2005-03-01}
+\date{2025-03-05}
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, borderline west={3pt}{0pt}{shadecolor}, enhanced, sharp corners, frame hidden, boxrule=0pt]}{\end{tcolorbox}}\fi
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
 
-During the US presidential election of November 7, 2000, Democratic
-voters in Palm Beach County complained that a confusing ballot format
-caused them to accidentally vote for the Reform Party candidate Pat
-Buchanan instead of the Democratic candidate Gore. Additionally, 19,000
-ballots were discarded because voters had marked two circles, possibly
-indicating that they got confused by the ballot and attempted to rectify
-their vote. Could the influx of votes for Buchanan in Palm Beach have
-occurred due to chance, or is there significant evidence that some
-external factor changed the outcome of the election? This analysis will
-examine the relationship between Bush votes (explanatory variable) and
-Buchanan votes (response variable) in Florida counties in order to draw
-a conclusion about whether or not the Palm Beach county vote count could
-have happened by chance given the trend/distribution of county votes.
+\section{Introduction}\label{introduction}
 
-\hypertarget{data-description}{%
-\section{Data Description}\label{data-description}}
+During the U.S. presidential election of November 7, 2000, Democratic
+voters in Palm Beach County complained that a confusing butterfly ballot
+format caused them to accidentally vote for the Reform Party candidate
+Pat Buchanan instead of the Democratic candidate Gore. Additionally,
+19,000 ballots were discarded because voters had marked two circles,
+possibly indicating that they got confused by the ballot and attempted
+to rectify their vote. Could the influx of votes for Buchanan in Palm
+Beach have occurred due to chance, or is there significant evidence that
+some external factor changed the outcome of the election? This analysis
+will examine Buchanan votes as a function of Bush votes in Florida
+counties in order to draw a conclusion about whether or not the Palm
+Beach county vote count could have happened by chance given the
+trend/distribution of Florida county votes.
+
+\section{Data Description}\label{data-description}
 
 The election data consists of the numbers of votes for Buchanan and Bush
-in all 67 counties in Florida. We construct plots and fit our model
-using every county except Palm Beach. We do this so after we fit our
-model, we can see how Palm Beach data compares to the rest of the data.
-Here is a scatter plot showcasing the relationship between Bush votes
-and Buchanan votes.
+in 67 counties in Florida. We exclude Palm Beach so that after we fit
+our model, we can see how the potentially abnormal Buchanan votes in
+that county compare to the rest of the data. The relationship between
+Bush and Buchanan votes is visualized in the scatter plot below
 
-\includegraphics{case_study_1_files/figure-pdf/warning-FALSE-1.pdf}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-2-1.pdf}
 
-\hypertarget{modeling-process}{%
-\section{Modeling Process}\label{modeling-process}}
+The average amount of Buchanan votes versus Bush votes is shown in the
+table below.
+
+\begin{table}[H]
+\centering
+\begin{tabular}[t]{cc}
+\toprule
+Average Buchanan Votes & Average Bush Votes\\
+\midrule
+210.76 & 41696.82\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Modeling Process}\label{modeling-process}
 
 In order to create a model, we first observed a relationship in the
 scatter plot showing the votes for Buchanan and Bush in each of the
 Florida counties. From this, we noticed data clustering occurring in the
-bottom left corner of the scatter plot. When creating diagnostic plots
-of the data, it was clear that regression conditions were not met. In
-order to expand the scale, we applied a log transformation to both the
-Buchanan and Bush votes, revealing a multiplicative relationship between
-the two. After transformation, the diagnostic plots reveal that
-regression conditions are met. Below is a plot of both variables
-transformed by log:
+bottom left corner of the scatter plot. We created diagnostic plots and
+checked to see if the model violated conditions for statistical
+inference. The diagnostic plots revealed violations of conditions of
+linearity, equal variance, and normality. In order to expand the scale
+and find a model that does not violate those conditions, we applied a
+log transformation to both the Buchanan and Bush votes, revealing a
+multiplicative relationship between the two. After transformation, the
+diagnostic plots reveal that regression conditions are met. Below is a
+plot of both variables transformed by log:
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{election\_wo\_pb }\SpecialCharTok{|\textgreater{}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{y =} \FunctionTok{log}\NormalTok{(Buchanan2000))) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Transformed Association between votes for Bush and votes for Buchanan."}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-2-1.pdf}
-
-}
-
-\end{figure}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-1.pdf}
 
 Let \(buchanan_i\) denote the number of votes cast for Buchanan in
 county \(i\) and \(bush_i\) denote the number of votes cast for Bush in
 Florida county \(i\) during the U.S. presidential election of November
 7, 2000. Our final linear regression model for the mean is
-\(E[log(buchanan_i) | log(bush_i)] = \beta_0 + \beta_1\log(bush_i).\) We
+\[E[log(buchanan_i) | log(bush_i)] = \beta_0 + \beta_1\log(bush_i)\] We
 fit our sample data to this model, and found estimates for the
 coefficients.
 
@@ -294,43 +306,42 @@ log(Bush2000) & 0.73 & 0.04 & 20.32 & 0\\
 
 Our sample intercept, \(\hat{\beta_0}\), is -2.34149 with a standard
 error of 0.35442. Our sample slope, \(\hat{\beta_1}\), is 0.73096 with a
-standard error of 0.03597. Both coefficients have a p value less than
-0.05, making them statistically significant. So our fitted model is
+standard error of 0.03597. Both coefficients have a p-value less than
+0.05, making them statistically significant. Thus, our fitted model is
 \(\widehat{\log(buchanan_i)} = -2.34149 + 0.73096\log(bush_i).\)
 
-Point Estimate = e\^{}6.384143 = 592.376848042
+Following this, we created a 95\% prediction interval for the number of
+predicted Buchanan votes in Palm Beach County during the 2000 election.
+Our prediction interval means that we are 95\% confident that the number
+of votes cast for Buchanan in the U.S. presidential election of November
+7, 2000 when the number of votes cast for Bush is 152,846 (the reported
+number of votes for Bush in Palm Beach county) is between 250 and 1399
+votes. By computing the difference in votes between the prediction
+interval and the actual number of Buchanan votes, we determine that
+there are likely between 2008 to 3157 miscast ballots.
 
-Prediction Interval = (e\^{}5.524656, e\^{}7.24363) = (250.8, 1399.164)
-
-This means that we are 95\% confident that the number of votes cast for
-Buchanan in the U.S. presidential election of November 7, 2000 when the
-number of votes cast for Bush is 152846 (the reported number of votes
-for Bush in Palm Beach county) is between 250.8 and 1399.164 votes.
-
-\hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section{Conclusion}\label{conclusion}
 
 Since the 3407 votes for Buchanan in Palm Beach County in the 2000
-election falls outside of our prediction interval of 250.8 to 1399.164
-where Bush receives 15,2846 votes, we can conclude that it is likely
-that there is some external factor impacting the votes of the residents
-in Palm Beach. One limitation of this analysis is the lack of
-information regarding the sociopolitical climate of Palm Beach County in
-2020. We do not know the demographic breakdown of the county. If there
-were a higher percentage of centrists who would vote for a member of the
-Reform Party in 2020 then that could explain the abnormal amount of
-Buchanan votes. Additionally, we don't know what campaigning was like in
-Palm Beach County. There could have been additional campaigns for
-Buchanan there that caused a vote increase particularly in that county.
-Based on the assumption that some of the votes cast for Buchanan in Palm
-Beach were actually intended to be votes for Gore, we make a
-generalization that there are more Democratic voters in Palm Beach
-County than represented in our data. Without the cultural knowledge of
-the environment where the data comes from, we can't be fully confident
-that our model is a good fit for the data.
+election falls outside of our prediction interval of 250 to 1399 where
+Bush receives 152,846 votes, we can conclude that it is likely that
+there is some external factor impacting the votes of the residents in
+Palm Beach. One limitation of this analysis is the lack of information
+regarding the sociopolitical climate of Palm Beach County in 2020. We do
+not know the demographic breakdown of the county. If there were a higher
+percentage of centrists who would vote for a member of the Reform Party
+in 2020 then that could explain the abnormal amount of Buchanan votes.
+Additionally, we don't know what campaigning was like in Palm Beach
+County. There could have been additional campaigns for Buchanan there
+that caused a vote increase particularly in that county. Based on the
+assumption that some of the votes cast for Buchanan in Palm Beach were
+actually intended to be votes for Gore, we make a generalization that
+there are more Democratic voters in Palm Beach County than represented
+in our data. Without the cultural knowledge of the environment where the
+data comes from, we can't be fully confident that our model is a good
+fit for the data.
 
-\hypertarget{r-appendix}{%
-\section{R Appendix}\label{r-appendix}}
+\section{R Appendix}\label{r-appendix}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -347,17 +358,34 @@ that our model is a good fit for the data.
 \NormalTok{election\_wo\_pb }\OtherTok{\textless{}{-}}\NormalTok{ election }\SpecialCharTok{|\textgreater{}} \FunctionTok{filter}\NormalTok{(County }\SpecialCharTok{!=} \StringTok{"Palm Beach"}\NormalTok{)}
 
 \CommentTok{\# Displaying an untransformed scatter plot between Bush and Buchanan votes}
-\NormalTok{election\_wo\_pb }\SpecialCharTok{|\textgreater{}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Bush2000, }\AttributeTok{y =}\NormalTok{ Buchanan2000)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Association between votes for Bush and votes for Buchanan."}\NormalTok{)}
+\NormalTok{election\_wo\_pb }\SpecialCharTok{|\textgreater{}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Bush2000, }\AttributeTok{y =}\NormalTok{ Buchanan2000)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Association between votes for Bush and votes for Buchanan."}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Relationship between Bush and Buchanan votes without Palm Beach county data"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-1.pdf}
 
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-1.pdf}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Getting the average number of votes for each of the candidates excluding Palm Beach}
+\NormalTok{buchanan }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(election\_wo\_pb}\SpecialCharTok{$}\NormalTok{Buchanan2000)}
+\NormalTok{bush }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(election\_wo\_pb}\SpecialCharTok{$}\NormalTok{Bush2000)}
 
-}
+\NormalTok{mean\_election\_wo\_pb\_table }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Buchanan2000 =}\NormalTok{ buchanan, }\AttributeTok{Bush2000 =}\NormalTok{ bush)}
 
-\end{figure}
+\NormalTok{mean\_election\_wo\_pb\_table }\SpecialCharTok{|\textgreater{}} \FunctionTok{kbl}\NormalTok{(}\AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Mean Buchanan Votes"}\NormalTok{, }\StringTok{"Mean Bush Votes"}\NormalTok{), }\AttributeTok{align =} \StringTok{"c"}\NormalTok{, }\AttributeTok{booktabs =}\NormalTok{ T, }\AttributeTok{linesep=}\StringTok{""}\NormalTok{, }\AttributeTok{digits =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{)) }\SpecialCharTok{|\textgreater{}} \FunctionTok{kable\_classic}\NormalTok{(}\AttributeTok{full\_width =}\NormalTok{ F, }\AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"HOLD\_position"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}[t]{cc}
+\toprule
+Mean Buchanan Votes & Mean Bush Votes\\
+\midrule
+210.76 & 41696.82\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -366,13 +394,7 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-2.pdf}
-
-}
-
-\end{figure}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -384,37 +406,13 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-3.pdf}
 
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-3.pdf}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-4.pdf}
 
-}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-5.pdf}
 
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-4.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-5.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-6.pdf}
-
-}
-
-\end{figure}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-6.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -424,37 +422,13 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-7.pdf}
 
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-7.pdf}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-8.pdf}
 
-}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-9.pdf}
 
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-8.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-9.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-10.pdf}
-
-}
-
-\end{figure}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-10.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -464,43 +438,32 @@ that our model is a good fit for the data.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}[H]
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-11.pdf}
 
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-11.pdf}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-12.pdf}
 
-}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-13.pdf}
 
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-12.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-13.pdf}
-
-}
-
-\end{figure}
-
-\begin{figure}[H]
-
-{\centering \includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-4-14.pdf}
-
-}
-
-\end{figure}
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-14.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# Model with a logarithmic explanatory and response variable transformation}
 \NormalTok{both\_transformed }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(Buchanan2000) }\SpecialCharTok{\textasciitilde{}} \FunctionTok{log}\NormalTok{(Bush2000), }\AttributeTok{data =}\NormalTok{ election\_wo\_pb)}
+\FunctionTok{plot}\NormalTok{(both\_transformed)}
+\end{Highlighting}
+\end{Shaded}
 
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-15.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-16.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-17.pdf}
+
+\includegraphics{case_study_1_files/figure-pdf/unnamed-chunk-6-18.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \CommentTok{\# Getting the coefficients for the doubly transformed model}
 \NormalTok{both\_transformed\_table }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(both\_transformed)}\SpecialCharTok{$}\NormalTok{coefficients}
 
@@ -537,15 +500,15 @@ Residuals:
 -0.95631 -0.21236  0.02503  0.28102  1.02056 
 
 Coefficients:
-              Estimate Std. Error t value Pr(>|t|)    
-(Intercept)   -2.34149    0.35442  -6.607 9.07e-09 ***
-log(Bush2000)  0.73096    0.03597  20.323  < 2e-16 ***
+              Estimate Std. Error t value             Pr(>|t|)    
+(Intercept)   -2.34149    0.35442  -6.607        0.00000000907 ***
+log(Bush2000)  0.73096    0.03597  20.323 < 0.0000000000000002 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 0.4198 on 64 degrees of freedom
 Multiple R-squared:  0.8658,    Adjusted R-squared:  0.8637 
-F-statistic:   413 on 1 and 64 DF,  p-value: < 2.2e-16
+F-statistic:   413 on 1 and 64 DF,  p-value: < 0.00000000000000022
 \end{verbatim}
 
 \begin{Shaded}
@@ -562,6 +525,7 @@ F-statistic:   413 on 1 and 64 DF,  p-value: < 2.2e-16
      <dbl>   <dbl>  <dbl>  <dbl>
 1   152846    6.38   5.52   7.24
 \end{verbatim}
+
 
 
 
